@@ -65,11 +65,8 @@ tasks {
 
 publishing {
   publications {
-    register<MavenPublication>("shadow") {
-      project.shadow.component(this)
-    }
     register<MavenPublication>("gpr") {
-      from(components["java"])
+      project.shadow.component(this)
     }
   }
 
