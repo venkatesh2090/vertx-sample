@@ -2,12 +2,18 @@ package com.example.sample;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
+import java.util.Objects;
+
 public class MainVerticle extends AbstractVerticle {
+
+  private static final int PORT = Integer.parseInt(
+    Objects.nonNull(System.getenv("PORT")) ?
+      System.getenv("PORT") :
+      "8080"
+  );
 
   @Override
   public void start() {
@@ -43,7 +49,7 @@ public class MainVerticle extends AbstractVerticle {
 
     vertx.createHttpServer()
       .requestHandler(router)
-      .listen(8080)
+      .listen(PORT)
       .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()));
   }
 
