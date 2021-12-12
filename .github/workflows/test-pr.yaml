@@ -13,7 +13,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-          cache: 'gradle'
 
       - name: Test with gradle
         uses: gradle/gradle-build-action@v2
