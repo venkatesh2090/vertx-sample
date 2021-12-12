@@ -1,0 +1,26 @@
+name: Build and publish jar to GitHub registry
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-jar:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Java 11
+        with:
+          version: '17'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: Publish with gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            publish
+            -Pgpr.user=${{ github.actor }}
+            -Pgpr.key=${{ github.token }}
