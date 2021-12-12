@@ -17,6 +17,8 @@ repositories {
 
 val vertxVersion = "4.2.1"
 val junitJupiterVersion = "5.8.2"
+val assertjVersion = "3.21.0"
+val jsonassertVersion = "1.5.0"
 
 val mainVerticleName = "com.example.sample.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
@@ -32,8 +34,11 @@ dependencies {
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-core")
   implementation("io.vertx:vertx-web")
+
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  testImplementation("org.assertj:assertj-core:$assertjVersion")
+  testImplementation("org.skyscreamer:jsonassert:$jsonassertVersion")
 }
 
 java {
