@@ -20,6 +20,7 @@ jobs:
       - name: Publish with gradle
         uses: gradle/gradle-build-action@v2
         with:
+          gradle-version: 7.3
           arguments: |
             publish
             -Pgpr.user=${{ github.actor }}
