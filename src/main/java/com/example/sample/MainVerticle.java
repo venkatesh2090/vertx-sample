@@ -9,11 +9,18 @@ import java.util.Objects;
 
 public class MainVerticle extends AbstractVerticle {
 
-  private static final int PORT = Integer.parseInt(
-    Objects.nonNull(System.getenv("PORT")) ?
-      System.getenv("PORT") :
-      "8080"
-  );
+  private final int port;
+
+  public MainVerticle(int port) {
+    this.port = port;
+  }
+
+  public MainVerticle() {
+    this(Integer.parseInt(Objects.nonNull(System.getenv("PORT")) ?
+        System.getenv("PORT") :
+        "8080"
+    ));
+  }
 
   @Override
   public void start() {
@@ -49,7 +56,7 @@ public class MainVerticle extends AbstractVerticle {
 
     vertx.createHttpServer()
       .requestHandler(router)
-      .listen(PORT)
+      .listen(port)
       .onSuccess(server -> System.out.println("Server started on port " + server.actualPort()));
   }
 
