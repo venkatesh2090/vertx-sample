@@ -1,8 +1,10 @@
 package com.example.sample;
 
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.RequestOptions;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +29,28 @@ public class TestMainVerticle {
   @Test
   void verticle_deployed(Vertx vertx, VertxTestContext testContext) {
     testContext.completeNow();
+  }
+
+  @Test
+  void when_home_then_respond_with_header(Vertx vertx, VertxTestContext testContext) {
+    var client = vertx.createHttpClient();
+    var testHeader = "X-Test-Header";
+    var testValue = "Test Value";
+
+    var options = new RequestOptions();
+    options.addHeader(testHeader, testValue);
+    options.setMethod(HttpMethod.GET);
+    options.setHost(HOST);
+    options.setPort(PORT);
+    options.setURI("/");
+    client.request(options)
+      .compose(req -> req.send().compose(HttpClientResponse::body))
+      .onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+        var headersInResponse = buffer.toJsonObject().getJsonObject("request").getJsonObject("headers");
+        assertThat(headersInResponse.containsKey(testHeader)).isTrue();
+        assertThat(headersInResponse.getString(testHeader)).isEqualToIgnoringCase(testValue);
+        testContext.completeNow();
+      })));
   }
 
   @Test
