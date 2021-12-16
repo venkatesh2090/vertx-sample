@@ -2,6 +2,7 @@ package com.example.sample;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
@@ -30,7 +31,14 @@ public class MainVerticle extends AbstractVerticle {
         .respond(ctx ->
           Future.succeededFuture(
             json()
-              .put("welcome", ctx.request().connection().remoteAddress().toString())
+              .put("client", json()
+                .put("address", ctx.request().connection().remoteAddress().hostAddress())
+                .put("port", ctx.request().connection().remoteAddress().port()))
+              .put("thisIs", json()
+                .put("address", ctx.request().connection().localAddress().hostAddress())
+                .put("port", ctx.request().connection().localAddress().port()))
+              .put("request", json()
+                .put("headers", headers(ctx.request())))
           ));
 
     router.get("/hello")
@@ -62,6 +70,13 @@ public class MainVerticle extends AbstractVerticle {
 
   JsonObject json() {
     return new JsonObject();
+  }
+
+  JsonObject headers(HttpServerRequest request) {
+    var json = new JsonObject();
+    request.headers()
+      .forEach(e -> json.put(e.getKey(), e.getValue()));
+    return json;
   }
 
 }
